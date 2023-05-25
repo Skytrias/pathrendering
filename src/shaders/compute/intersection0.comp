@@ -1,0 +1,49 @@
+void cuts_run(vec4 cuts, int ncuts) {
+	int p = 0;
+
+	for (int i = 0; i < ncuts; i += 1) {
+		// TODO do something
+	}
+}
+
+void main() {
+	int index = int(gl_GlobalInvocationID.x);
+	Curve curve = curves.data[index];
+
+	int ncuts = 0;
+
+	// TODO fetch visible data
+	bool is_visible = true;
+
+	float q0 = 0;
+	float q1 = 0;
+	float q2 = 0;
+	float q3 = 0;
+
+	if (is_visible) {
+		for (int i = 0; i < 2; i += 1) {
+			switch (curve.count) {
+				case C_LINE: {
+					// do nothing
+					break;
+				}
+
+				// TODO other types
+			}
+		}
+
+		// // TODO this was maybe sorted
+		// q0 = 0;
+		// q1 = 1;
+		// q2 = 2;
+		// q3 = 3;
+
+		// if (n_cuts >= 2)
+	}
+
+	vec4 cuts = vec4(q0, q1, q2, q3);
+
+	// TODO set to cache
+
+	cuts_run(cuts, ncuts);
+}

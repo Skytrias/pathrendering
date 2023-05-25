@@ -1,0 +1,36 @@
+layout(rgba8, binding = 0) uniform image2D img_output;
+
+void main() {
+	int line = int(gl_GlobalInvocationID.x);
+	Lane lane = lanes.data[line];
+
+	if (lane.fragment_head == -1) {
+		return;
+	}
+
+	int winding = 0;
+	Fragment frag = fragments.data[lane.fragment_head];
+	bool fragment_valid = true;
+
+	for (int x = 0; x < indices.window_width; x += 1) {
+		while (fragment_valid && frag.x == x) {
+			winding += frag.winding_number;
+
+			if (frag.fragment_next == -1) {
+				fragment_valid = false;
+			} else {
+				frag = fragments.data[frag.fragment_next];
+			}
+		}
+
+		vec4 color = vec4(0, 0, 0, 0);
+
+		// if (winding != 0) {
+		if ((winding & 1) == 1) {
+			color = vec4(1, 0, 0, 1);
+		}		
+
+		ivec2 px = ivec2(x, line);
+		imageStore(img_output, px, color);
+	}
+}

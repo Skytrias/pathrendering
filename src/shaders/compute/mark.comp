@@ -1,0 +1,28 @@
+void main() {
+	int fragment_index = int(gl_GlobalInvocationID.x);
+	Fragment f0 = fragments.data[fragment_index];
+	Fragment f1 = fragments.data[fragment_index + 1];
+
+	bool fragment;
+	bool span;
+
+	if (f0.x < 0 || f1.y < 0 || f1.x >= indices.window_width || f1.y >= indices.window_width) {
+		fragment = false;
+	} else if (f0.path_index != f1.path_index || f0.x != f1.x || f0.y != f1.y) {
+		fragment = true;
+	} else {
+		fragment = false;
+	}
+
+	bool fill = true;
+	bool winding_flag = fill ? ((f1.winding_number & 1) == 1) : (f1.winding_number != 0);
+
+	if (f0.y == f1.y && ((f0.x + 1) < f1.x) && f0.path_index == f1.path_index && winding_flag) {
+		span = true;
+	} else {
+		span = false;		
+	}
+
+	fragments.data[fragment_index + 1].span_flag = span;
+	fragments.data[fragment_index + 1].fragment_flag = fragment;
+}

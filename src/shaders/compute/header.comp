@@ -1,0 +1,72 @@
+// kind of curve
+#define C_LINE 0
+#define C_QUADRATIC 1
+#define C_CUBIC 2
+
+struct Curve {
+	vec2 p0;
+	vec2 p1;
+	vec2 p2;
+	vec2 p3;
+	int count;
+	int path_index;
+};
+
+struct Path {
+	vec4 color;
+	vec4 box;
+	vec4 clip;
+
+	float xform[6];
+
+	int curve_index_start;
+	int curve_index_current;
+};
+
+struct Fragment {
+	int x;
+	int y;
+
+	int index;
+	int path_index;
+
+	int winding_number;
+
+	bool fragment_flag;
+	bool span_flag;
+
+	int fragment_next;
+};
+
+struct Lane {
+	int fragment_head;
+	int fragment_tail;
+};
+
+layout(std430, binding = 0) buffer Input_Indices {
+	int paths;
+	int fragments;
+
+	int window_width;
+	int window_height;
+} indices;
+
+layout(std430, binding = 1) readonly buffer Input_Curves {
+	Curve data[];
+} curves;
+
+layout(std430, binding = 2) buffer Paths {
+	Path data[];
+} paths;
+
+layout(std430, binding = 3) buffer Lanes {
+	Lane data[];
+} lanes;
+
+layout(std430, binding = 4) buffer Fragments {
+	Fragment data[];
+} fragments;
+
+layout(std430, binding = 5) buffer Coverages {
+	float data[];
+} coverages;
